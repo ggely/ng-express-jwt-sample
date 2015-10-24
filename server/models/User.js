@@ -66,7 +66,7 @@ UserSchema.path('email').validate(function (email, fn) {
 }, 'Email already exists');
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-    return hashed_password && hashed_password.length && this._password.length;
+    return hashed_password && hashed_password.length && this._password && this._password.length;
 }, 'Password cannot be blank');
 
 

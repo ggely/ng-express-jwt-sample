@@ -20,15 +20,5 @@ module.exports = function (app, passport) {
     app.use(cookieParser());
 
     app.use(passport.initialize());
-    app.use(passport.session({
-        secret: 'keyboard cat',
-        resave: true,
-        saveUninitialized: true,
-        cookie: {secure: false},
-        store: new mongoStore({
-            url: config.db,
-            collection: 'sessions'
-        })
-    }));
 
 };
