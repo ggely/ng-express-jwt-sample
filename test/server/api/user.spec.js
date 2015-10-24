@@ -35,8 +35,9 @@ describe('Users', function () {
             request(helper.app)
                 .post('/api/users/login')
                 .send({email: 'admin@admin.com',password: 'admin'})
-                .expect(200)
-                .end(done)
+                .expect(200, {
+                    email: 'admin@admin.com',
+                }, done);
         });
     })
 });
