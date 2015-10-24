@@ -6,5 +6,8 @@ var router = express.Router();
 
 router.post('/login', passport.authenticate('local'), controller.getToken);
 router.get('/me', auth.isAuthenticated(), controller.me);
+router.get('/', auth.isAdmin(), controller.getAllNonAdminUsers);
+router.post('/', auth.isAdmin(), controller.createUser);
+router.get('/:id', auth.isAdmin(), controller.getUser);
 
 module.exports = router;

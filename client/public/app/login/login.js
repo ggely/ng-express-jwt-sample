@@ -20,7 +20,7 @@ angular.module( 'logienApp.login', [
                 data: $scope.user
             }).then(function(response) {
                 console.log(response);
-                store.set('jwt', response.data.token);
+                store.set('jwt', response.data.auth_token);
                 $state.go('home');
             }, function(error) {
                 alert(error.data);
