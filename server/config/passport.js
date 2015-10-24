@@ -31,7 +31,7 @@ var local = new LocalStrategy({
             user.authToken = token;
             user.save(function (err) {
                 if (err)return done(err);
-                done(null, user)
+                done(null, user);
             });
         });
     }

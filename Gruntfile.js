@@ -35,7 +35,7 @@ module.exports = function (grunt) {
                     dot: true,
                     cwd: 'client/public',
                     dest: 'dist/public',
-                    src: ['app/**/*.js','app/**/*.html',
+                    src: ['app/**/*.js', 'app/**/*.html',
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'components/**/*.js',
@@ -62,9 +62,9 @@ module.exports = function (grunt) {
         },
         wiredep: {
             target: {
-                src: ['dist/public/**/*.html','dist/public/**/*.js'],
+                src: ['dist/public/**/*.html', 'dist/public/**/*.js'],
                 ignorePath: '../../client/public/',
-                exclude: [ 'bootstrap.js', '/json3/', '/es5-shim/']
+                exclude: ['bootstrap.js', '/json3/', '/es5-shim/']
             }
         },
         injector: {
@@ -89,17 +89,24 @@ module.exports = function (grunt) {
                     ]
                 }
             },
+        },
+        watch: {
+            files: ['client/public/**/*'],
+            tasks: ['build']
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-injector');
     grunt.loadNpmTasks('grunt-wiredep');
 
     // Default task(s).
-    grunt.registerTask('default', ['jshint','copy','wiredep','injector', 'nodemon:dev']);
+    grunt.registerTask('build', ['jshint', 'copy', 'wiredep', 'injector']);
+    grunt.registerTask('default', ['build', 'nodemon:dev', 'watch']);
+    grunt.registerTask('serve', ['build', 'nodemon:dev']);
 
 };

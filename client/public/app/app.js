@@ -1,54 +1,40 @@
 'use strict';
 
 angular.module('logienApp', [
-  'ngCookies',
-  'ngResource',
-  'ngSanitize',
-  'ui.router',
-  'ui.bootstrap'
+    'logienApp.login',
+    'logienApp.home',
+    'ui.router',
+    'ngResource',
+    'angular-storage',
+    'angular-jwt'
+
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
-    $urlRouterProvider
-      .otherwise('/');
+    .config(function myAppConfig($urlRouterProvider, jwtInterceptorProvider, $httpProvider) {
+        $urlRouterProvider.otherwise('/');
 
-    $locationProvider.html5Mode(true);
-    $httpProvider.interceptors.push('authInterceptor');
-  })
+        jwtInterceptorProvider.tokenGetter = function (store) {
+            return store.get('jwt');
+        };
 
-  .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
-    return {
-      // Add authorization token to headers
-      request: function (config) {
-        config.headers = config.headers || {};
-        if ($cookieStore.get('token')) {
-          config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
-        }
-        return config;
-      },
+        $httpProvider.interceptors.push('jwtInterceptor');
+    })
+    .run(function ($rootScope, $state, store, jwtHelper) {
+        $rootScope.$on('$stateChangeStart', function (e, to) {
+            if (to.data && to.data.requiresLogin) {
 
-      // Intercept 401s and redirect you to login
-      responseError: function(response) {
-        if(response.status === 401) {
-          $location.path('/login');
-          // remove any stale tokens
-          $cookieStore.remove('token');
-          return $q.reject(response);
-        }
-        else {
-          return $q.reject(response);
-        }
-      }
-    };
-  })
+                if (!store.get('jwt') || jwtHelper.isTokenExpired(store.get('jwt'))) {
+                    e.preventDefault();
+                    $state.go('login');
+                }
+            }
+        });
+    })
+    .controller('AppCtrl', function AppCtrl($scope, $location) {
+        $scope.$on('$routeChangeSuccess', function (e, nextRoute) {
+            if (nextRoute.$$route && angular.isDefined(nextRoute.$$route.pageTitle)) {
+                $scope.pageTitle = nextRoute.$$route.pageTitle + ' | ngEurope Sample';
+            }
+        });
+    })
 
-  .run(function ($rootScope, $location, Auth) {
-    // Redirect to login if route requires auth and you're not logged in
-    $rootScope.$on('$stateChangeStart', function (event, next) {
-      Auth.isLoggedInAsync(function(loggedIn) {
-        if (next.authenticate && !loggedIn) {
-          event.preventDefault();
-          $location.path('/login');
-        }
-      });
-    });
-  });
+;
