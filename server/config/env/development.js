@@ -1,3 +1,3 @@
 module.exports = {
-    db: 'mongodb://localhost/logien_dev'
+    db: 'mongodb://localhost/logienDev'
 };

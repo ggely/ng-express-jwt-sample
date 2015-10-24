@@ -66,7 +66,7 @@ UserSchema.path('email').validate(function (email, fn) {
 }, 'Email already exists');
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-    return hashed_password.length && this._password.length;
+    return hashed_password && hashed_password.length && this._password.length;
 }, 'Password cannot be blank');
 
 
@@ -108,15 +108,17 @@ UserSchema.methods = {
      */
 
     encryptPassword: function (password) {
-        if (!password) return '';
-        try {
-            return crypto
-                .createHmac('sha1', this.salt)
-                .update(password)
-                .digest('hex');
-        } catch (err) {
-            return '';
+        if (!password || !this.salt) {
+            return null;
         }
+
+        var defaultIterations = 10000;
+        var defaultKeyLength = 64;
+        var salt = new Buffer(this.salt, 'base64');
+
+        return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength)
+            .toString('base64');
+
     }
 };
 

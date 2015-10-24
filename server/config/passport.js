@@ -9,12 +9,14 @@ var User = mongoose.model('User');
 
 var local = new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password'
+        passwordField: 'password',
+        session: true
     },
     function(email, password, done) {
+
         var options = {
             criteria: { email: email },
-            select: 'name username email hashed_password salt'
+            select: 'email hashed_password salt'
         };
         User.load(options, function (err, user) {
             if (err) return done(err);
