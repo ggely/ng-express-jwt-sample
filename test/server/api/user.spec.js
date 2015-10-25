@@ -3,7 +3,18 @@ var request = require('supertest');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
-describe('Users', function () {
+describe('Users', function (done) {
+    var adminToken;
+    before(function (done) {
+        var createAdminToken = function () {
+            User.findOne({'isAdmin': true}, function (err, user) {
+                adminToken = helper.createOAuthToken(user._id, 'admin@admin.com');
+                done();
+            });
+        };
+        helper.waitInit(createAdminToken);
+    });
+
     describe('POST /api/users/login', function () {
         it('400 if email not given', function (done) {
             request(helper.app)
@@ -37,9 +48,7 @@ describe('Users', function () {
             request(helper.app)
                 .post('/api/users/login')
                 .send({email: 'admin@admin.com', password: 'admin'})
-                .expect(function (res) {
-                    return typeof res.auh_token !== 'undefined';
-                })
+                .expect(200)
                 .end(done)
         });
         after(function (done) {
@@ -62,7 +71,7 @@ describe('Users', function () {
             user.save(function (err, result) {
                 request(helper.app)
                     .get('/api/users')
-                    .set('Authorization', helper.createOAuthToken('foo2@test.com', 'foobar'))
+                    .set('Authorization', helper.createOAuthToken(result._id, 'foo2@test.com', 'foobar'))
                     .send()
                     .expect(403)
                     .end(done)
@@ -76,7 +85,7 @@ describe('Users', function () {
             user.save(function (err, result) {
                 request(helper.app)
                     .get('/api/users')
-                    .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                    .set('Authorization', adminToken)
                     .send()
                     .expect(function (res) {
                         return res.body.length == 1;
@@ -115,7 +124,7 @@ describe('Users', function () {
             user.save(function (err, result) {
                 request(helper.app)
                     .get('/api/users/' + id)
-                    .set('Authorization', helper.createOAuthToken('secondAdmin@test.com', 'foobar'))
+                    .set('Authorization', helper.createOAuthToken(result._id, 'secondAdmin@test.com'))
                     .send()
                     .expect(403)
                     .end(done)
@@ -124,7 +133,7 @@ describe('Users', function () {
         it('get the user', function (done) {
             request(helper.app)
                 .get('/api/users/' + id)
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .set('Authorization', adminToken)
                 .send()
                 .expect({"_id": id + '', "isAdmin": false, "email": "foo2@test.com"})
                 .end(done)
@@ -154,13 +163,13 @@ describe('Users', function () {
         });
         it('403 if not admin', function (done) {
             var user = new User({
-                email: 'foo2@test.com',
+                email: 'notadmin@test.com',
                 password: 'foobar'
             });
             user.save(function (err, result) {
                 request(helper.app)
                     .post('/api/users')
-                    .set('Authorization', helper.createOAuthToken('foo2@test.com', 'foobar'))
+                    .set('Authorization', helper.createOAuthToken(result._id, 'notadmin@test.com'))
                     .send()
                     .expect(403)
                     .end(done)
@@ -169,7 +178,7 @@ describe('Users', function () {
         it('create the user', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .set('Authorization', adminToken)
                 .send({
                     email: 'test@test.com',
                     password: 'test'
@@ -187,7 +196,7 @@ describe('Users', function () {
         it('create the user and admin field in immutable', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .set('Authorization', adminToken)
                 .send({
                     email: 'test2@test.com',
                     password: 'test',
@@ -211,7 +220,7 @@ describe('Users', function () {
             user.save(function (err, result) {
                 request(helper.app)
                     .post('/api/users')
-                    .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                    .set('Authorization', adminToken)
                     .send({
                         email: 'existing@test.com',
                         password: 'foobar'
@@ -223,7 +232,7 @@ describe('Users', function () {
         it('failed if email invalid', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .set('Authorization', adminToken)
                 .send({
                     email: 'invalid@test',
                     password: 'foobar'
@@ -234,7 +243,7 @@ describe('Users', function () {
         it('failed if email password <= 4', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .set('Authorization', adminToken)
                 .send({
                     email: 'toohort@test',
                     password: 'foo'
@@ -245,7 +254,7 @@ describe('Users', function () {
         it('failed if email password => 16', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .set('Authorization', adminToken)
                 .send({
                     email: 'toolong@test',
                     password: '12345678901234567'
@@ -271,7 +280,7 @@ describe('Users', function () {
         });
         it('401 if not logged', function (done) {
             request(helper.app)
-                .post('/api/users/'+id)
+                .post('/api/users/' + id)
                 .send()
                 .expect(401)
                 .end(done)
@@ -283,8 +292,8 @@ describe('Users', function () {
             });
             user.save(function (err, result) {
                 request(helper.app)
-                    .post('/api/users/'+id)
-                    .set('Authorization', helper.createOAuthToken('notAdmin@test.com', 'foobar'))
+                    .post('/api/users/' + id)
+                    .set('Authorization', helper.createOAuthToken(result._id, 'notAdmin@test.com'))
                     .send()
                     .expect(403)
                     .end(done)
@@ -292,14 +301,14 @@ describe('Users', function () {
         });
         it('Modify the user', function (done) {
             request(helper.app)
-                .post('/api/users/'+id)
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .post('/api/users/' + id)
+                .set('Authorization', adminToken)
                 .send({
                     email: 'test@test.com',
                     password: 'test'
                 })
                 .expect({
-                    '_id': id+'',
+                    '_id': id + '',
                     email: 'test@test.com',
                     isAdmin: false
                 })
@@ -307,15 +316,15 @@ describe('Users', function () {
         });
         it('Modify the user and admin field in immutable', function (done) {
             request(helper.app)
-                .post('/api/users/'+id)
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .post('/api/users/' + id)
+                .set('Authorization', adminToken)
                 .send({
                     email: 'immutableAdmin@test.com',
                     password: 'test',
                     isAdmin: true
                 })
                 .expect({
-                    '_id': id +'',
+                    '_id': id + '',
                     email: 'immutableAdmin@test.com',
                     isAdmin: false
                 })
@@ -328,8 +337,8 @@ describe('Users', function () {
             });
             user.save(function (err, result) {
                 request(helper.app)
-                    .post('/api/users/'+id)
-                    .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                    .post('/api/users/' + id)
+                    .set('Authorization', adminToken)
                     .send({
                         email: 'existing@test.com',
                         password: 'foobar'
@@ -346,7 +355,7 @@ describe('Users', function () {
             user.save(function (err, result) {
                 request(helper.app)
                     .post('/api/users/' + result._id)
-                    .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                    .set('Authorization', adminToken)
                     .send({
                         email: 'sameEmail@test.com',
                         password: 'test'
@@ -360,7 +369,7 @@ describe('Users', function () {
             });
         });
         it('Success if password not provide, keep the same', function (done) {
-            var validate = function(){
+            var validate = function () {
                 request(helper.app)
                     .post('/api/users/login')
                     .send({
@@ -378,7 +387,7 @@ describe('Users', function () {
             user.save(function (err, result) {
                 request(helper.app)
                     .post('/api/users/' + result._id)
-                    .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                    .set('Authorization', adminToken)
                     .send({
                         email: 'samePassword2@test.com'
                     })
@@ -388,8 +397,8 @@ describe('Users', function () {
         });
         it('failed if email invalid', function (done) {
             request(helper.app)
-                .post('/api/users/'+id)
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .post('/api/users/' + id)
+                .set('Authorization', adminToken)
                 .send({
                     email: 'invalid@test',
                     password: 'foobar'
@@ -399,8 +408,8 @@ describe('Users', function () {
         });
         it('failed if email password <= 4', function (done) {
             request(helper.app)
-                .post('/api/users/'+id)
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .post('/api/users/' + id)
+                .set('Authorization', adminToken)
                 .send({
                     email: 'toohort@test',
                     password: 'foo'
@@ -410,8 +419,8 @@ describe('Users', function () {
         });
         it('failed if email password => 16', function (done) {
             request(helper.app)
-                .post('/api/users/'+id)
-                .set('Authorization', helper.createOAuthToken('admin@admin.com', 'admin'))
+                .post('/api/users/' + id)
+                .set('Authorization', adminToken)
                 .send({
                     email: 'toolong@test',
                     password: '12345678901234567'

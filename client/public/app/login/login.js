@@ -19,7 +19,6 @@ angular.module( 'logienApp.login', [
                 method: 'POST',
                 data: $scope.user
             }).then(function(response) {
-                console.log(response);
                 store.set('jwt', response.data.auth_token);
                 $state.go('home');
             }, function(error) {

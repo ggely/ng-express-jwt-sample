@@ -1,5 +1,5 @@
 angular.module('logienApp.navbar', [])
-    .controller('NavbarCtrl', function ($scope, $location, Users) {
+    .controller('NavbarCtrl', function ($scope, $location, Users, store, $location) {
         $scope.user = Users.get({controller: 'me'});
         $scope.isActive = function (path) {
             var currentPath = $location.path().split('/')[1];
@@ -8,6 +8,11 @@ angular.module('logienApp.navbar', [])
             }
             return currentPath === path.split('/')[1];
         };
+
+        $scope.logout = function(){
+            store.set('jwt', '');
+            $location.path('/login');
+        }
     })
     .directive('navbar', function () {
         return {

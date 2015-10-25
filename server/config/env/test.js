@@ -1,5 +1,5 @@
 
 module.exports = {
-    db: 'mongodb://localhost/logienTest',
+    db: 'mongodb://localhost/logien-test',
     tokenSecret : "tokenSecret"
 };

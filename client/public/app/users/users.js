@@ -21,9 +21,9 @@ angular.module('logienApp.users', [
         };
         var initModifiedUser = function () {
             if ($scope.selectedUser) {
-                $scope.modifiedUser = {email: $scope.selectedUser.email, password: ''};
+                $scope.modifiedUser = {_id: $scope.selectedUser._id, email: $scope.selectedUser.email, password: ''};
             } else {
-                $scope.modifiedUser = {email: '', password: ''};
+                $scope.modifiedUser = {_id: '', email: '', password: ''};
             }
         };
 
@@ -47,8 +47,7 @@ angular.module('logienApp.users', [
 
         $scope.modifyEmail = function () {
             if ($scope.selectedUser) {
-                $scope.modifiedUser._id = $scope.selectedUser._id;
-                Users.save($scope.modifiedUser).$promise.then(
+                Users.save($scope.modifiedUser,
                     function (value) {
                         $scope.selectedUser.email = $scope.modifiedUser.email;
                         initModifiedUser();
@@ -65,7 +64,7 @@ angular.module('logienApp.users', [
         $scope.modifyPassword = function () {
             if ($scope.selectedUser) {
                 $scope.selectedUser.password = $scope.modifiedUser.password;
-                Users.save($scope.selectedUser).$promise.then(
+                Users.save($scope.selectedUser,
                     function (value) {
                         initModifiedUser();
                         $scope.initResult();
@@ -93,38 +92,4 @@ angular.module('logienApp.users', [
         $scope.initResult();
         refreshList();
 
-    }).directive('available', function () {
-        return {
-            require: 'ngModel',
-            link: function (scope, elm, attrs, ctrl) {
-                var userEmails = scope.users;
-
-                ctrl.$validators.available = function (modelValue) {
-                    if (ctrl.$isEmpty(modelValue)) {
-                        return true;
-                    }
-                    if (scope.me.email === modelValue || userEmails.filter(function (elm) {
-                            return elm.email == modelValue && elm.email !== scope.selectedUser.email;
-                        }).length !== 0) {
-                        return false;
-                    }
-                    ;
-                    return true;
-                };
-            }
-        };
-    }).directive('validateEmail', function () {
-        var EMAIL_REGEXP = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-
-        return {
-            require: 'ngModel',
-            restrict: '',
-            link: function (scope, elm, attrs, ctrl) {
-                if (ctrl && ctrl.$validators.email) {
-                    ctrl.$validators.email = function (modelValue) {
-                        return ctrl.$isEmpty(modelValue) || EMAIL_REGEXP.test(modelValue);
-                    };
-                }
-            }
-        };
     });

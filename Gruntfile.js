@@ -17,15 +17,7 @@ module.exports = function (grunt) {
                     quiet: false,
                     clearRequireCache: false
                 },
-                src: ['test/**/*spec.js']
-            },
-            coverage: {
-                options: {
-                    reporter: 'html-cov',
-                    quiet: true,
-                    captureFile: 'coverage.html'
-                },
-                src: ['test/**/*spec.js']
+                src: ['test/server/**/*spec.js']
             }
         },
         copy: {
@@ -65,11 +57,10 @@ module.exports = function (grunt) {
                 src: ['dist/public/**/*.html', 'dist/public/**/*.js'],
                 ignorePath: '../../client/public/',
                 exclude: ['bootstrap.js', '/json3/', '/es5-shim/']
-            }
+            },
         },
         injector: {
             options: {},
-            // Inject application script files into index.html (doesn't include bower)
             scripts: {
                 options: {
                     transform: function (filePath) {
@@ -105,7 +96,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-wiredep');
 
     // Default task(s).
-    grunt.registerTask('build', ['jshint', 'copy', 'wiredep', 'injector']);
+    grunt.registerTask('build', ['jshint', 'copy', 'wiredep:target', 'injector']);
     grunt.registerTask('default', ['build', 'nodemon:dev', 'watch']);
     grunt.registerTask('serve', ['build', 'nodemon:dev']);
 

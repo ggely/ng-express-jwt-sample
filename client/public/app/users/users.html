@@ -3,42 +3,63 @@
         <h1>Personal Temperature Tracker</h1>
         <navbar></navbar>
     </div>
-    <ul class="list-group">
-        <!-- Loop over players using ng-repeat -->
-        <li class="list-group-item" ng-repeat="user in users">
-            <div ng-click="select(user)">{{user.email}}</div>
-            <div ng-show="user._id==selectedUser._id">
-                <form class="form-inline" name="modifyEmailForm">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input ng-focus="initResult()" type="email" class="form-control" required available validate-email
-                               ng-model="modifiedUser.email"
-                               placeholder="Email">
-                        <span class="error" ng-show="modifyEmailForm.$error.available">This email already exists</span>
-                        <span class="error" ng-show="modifyEmailForm.$error.email">Invalid email</span>
-                    </div>
-                    <button ng-disabled="!modifyEmailForm.$valid" class="btn btn-default" ng-click="modifyEmail()">Change email</button>
-                </form>
-                <form class="form-inline" name="modifyPassworForm">
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input ng-focus="initResult()" type="password" class="form-control" required ng-model="modifiedUser.password"
-                               ng-minlength="4" ng-maxlength="16" placeholder="Password">
-                        <span class="error" ng-show="modifyPassworForm.$error.minlength || modifyPassworForm.$error.maxlength">Password should have between 4 and 16 characters</span>
-                    </div>
-                    <button ng-disabled="!modifyPassworForm.$valid" class="btn btn-default" ng-click="modifyPassword()">
-                        Change password
-                    </button>
-                </form>
-                <div ng-show="result.success">Your modifications was applied</div>
-                <div ng-show="result.error">Something was wrong. Please check your modifications</div>
+    <section class="row">
+        <div class="col-sm-4">
+            <ul class="list-group">
+                <!-- Loop over players using ng-repeat -->
+                <li class="list-group-item" ng-repeat="user in users"  ng-click="select(user)">
+                    <div>{{user.email}}</div>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <div class="col-sm-8" ng-show="selectedUser._id">
+                <h2>{{selectedUser.email}}</h2>
+                <div>
+                    <form class="form-inline" name="modifyEmailForm">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input ng-focus="initResult()" type="email" class="form-control" required available
+                                   user="selectedUser" admin="" validate-email
+                                   ng-model="modifiedUser.email"
+                                   placeholder="Email">
+
+                        </div>
+                        <button ng-disabled="!modifyEmailForm.$valid" class="btn btn-default" ng-click="modifyEmail()">
+                            Change email
+                        </button>
+                        <div>
+                             <span class="error"
+                                   ng-show="modifyEmailForm.$error.available">This email already exists</span>
+                            <span class="error" ng-show="modifyEmailForm.$error.email">Invalid email</span>
+                        </div>
+                    </form>
+                    <form class="form-inline" name="modifyPassworForm">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input ng-focus="initResult()" type="password" class="form-control" required
+                                   ng-model="modifiedUser.password"
+                                   ng-minlength="4" ng-maxlength="16" placeholder="Password">
+                        </div>
+                        <button ng-disabled="!modifyPassworForm.$valid" class="btn btn-default"
+                                ng-click="modifyPassword()">
+                            Change password
+                        </button>
+                        <div><span class="error"
+                                   ng-show="modifyPassworForm.$error.minlength || modifyPassworForm.$error.maxlength">Password should have between 4 and 16 characters</span>
+                        </div>
+                    </form>
+                    <div ng-show="result.success">Your modifications was applied</div>
+                    <div ng-show="result.error">Something was wrong. Please check your modifications</div>
+                </div>
             </div>
-        </li>
-    </ul>
+        </div>
+    </section>
     <form class="form-inline" name="createUserForm">
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" required available validate-email ng-model="newUser.email"
+            <input type="email" class="form-control" required available admin="true" validate-email
+                   ng-model="newUser.email"
                    id="email" placeholder="Email">
             <span class="error" ng-show="createUserForm.$error.available">This email already exists</span>
             <span class="error" ng-show="createUserForm.$error.email">Invalid email</span>
@@ -52,3 +73,4 @@
         <button ng-disabled="!createUserForm.$valid" class="btn btn-default" ng-click="addNewUser()">Add</button>
     </form>
 </div>
+

@@ -20,17 +20,17 @@ function isAuthenticated() {
             return res.status(401).send('Unauthorized');
         }
 
-        if (!decoded || !decoded.email) {
+        if (!decoded || !decoded._id) {
             res.status(401).send('Unauthorized');
         }
         var options = {
-            criteria: {email: decoded.email},
+            criteria: {_id: decoded._id},
             select: 'email isAdmin'
         };
         User.load(options, function (err, user) {
             if (err) return res.status(401).send('Unauthorized');
             if (!user) {
-                res.status(401).send('Unauthorized');
+               return res.status(401).send('Unauthorized');
             }
             req.user = user;
             next();
@@ -50,6 +50,16 @@ function isAdmin() {
             }
         });
 }
+function isAdminOrIdem() {
+    return compose()
+        .use(isAuthenticated())
+        .use(function validate(req, res, next) {
+            if (req.user.isAdmin) return next();
+            if (req.query._id && req.query._id === req.user._id) return next();
+            res.status(403).send('Forbidden');
+        });
+}
 
 exports.isAdmin = isAdmin;
+exports.isAdminOrIdem = isAdminOrIdem;
 exports.isAuthenticated = isAuthenticated;

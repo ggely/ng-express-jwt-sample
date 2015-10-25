@@ -8,6 +8,7 @@ router.post('/login', passport.authenticate('local'), controller.getToken);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/', auth.isAdmin(), controller.getAllNonAdminUsers);
 router.post('/', auth.isAdmin(), controller.createUser);
+router.get('/email', auth.isAdminOrIdem(), controller.validateEmail);
 router.get('/:id', auth.isAdmin(), controller.getUser);
 router.post('/:id', auth.isAdmin(), controller.modifyUser);
 

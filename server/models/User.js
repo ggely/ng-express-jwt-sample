@@ -34,7 +34,7 @@ UserSchema.path('isAdmin').validate(function (isAdmin, next) {
     var User = mongoose.model('User');
     var user_id = this._id;
     User.findOne({'isAdmin': true}, function (err, admin) {
-        if (admin && admin._id !== user_id) {
+        if (admin && admin._id != user_id + '') {
             next(false);
         } else {
             next(true);

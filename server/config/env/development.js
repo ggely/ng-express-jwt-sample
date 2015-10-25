@@ -1,4 +1,4 @@
 module.exports = {
-    db: 'mongodb://localhost/logienDev',
+    db: 'mongodb://localhost/dev',
     tokenSecret : "tokenSecret"
 };

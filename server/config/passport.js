@@ -27,7 +27,7 @@ var local = new LocalStrategy({
             if (!user.authenticate(password)) {
                 return done(null, false, {message: 'Invalid password'});
             }
-            var token = jwt.encode({email: user.email, hashed_password: user.hashed_password}, config.tokenSecret);
+            var token = jwt.encode({_id: user._id, email: user.email}, config.tokenSecret);
             user.authToken = token;
             user.save(function (err) {
                 if (err)return done(err);
