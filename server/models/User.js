@@ -29,7 +29,7 @@ UserSchema
 
 UserSchema.path('isAdmin').validate(function (isAdmin, next) {
     if (!isAdmin) {
-        next(true);
+        return next(true);
     }
     var User = mongoose.model('User');
     var user_id = this._id;
@@ -63,8 +63,8 @@ UserSchema.path('email').validate(function (email, fn) {
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
     var res = hashed_password && hashed_password.length && this._password && this._password.length;
-    if(this._password){
-        res = res && this._password.length>=4 && this._password.length<=16
+    if (this._password) {
+        res = res && this._password.length >= 4 && this._password.length <= 16;
     }
     return res;
 }, 'Password should be between 4 and 16 characters');

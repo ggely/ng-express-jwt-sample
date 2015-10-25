@@ -9,5 +9,6 @@ router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/', auth.isAdmin(), controller.getAllNonAdminUsers);
 router.post('/', auth.isAdmin(), controller.createUser);
 router.get('/:id', auth.isAdmin(), controller.getUser);
+router.post('/:id', auth.isAdmin(), controller.modifyUser);
 
 module.exports = router;

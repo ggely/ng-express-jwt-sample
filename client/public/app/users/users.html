@@ -6,7 +6,33 @@
     <ul class="list-group">
         <!-- Loop over players using ng-repeat -->
         <li class="list-group-item" ng-repeat="user in users">
-            {{user.email}}
+            <div ng-click="select(user)">{{user.email}}</div>
+            <div ng-show="user._id==selectedUser._id">
+                <form class="form-inline" name="modifyEmailForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input ng-focus="initResult()" type="email" class="form-control" required available validate-email
+                               ng-model="modifiedUser.email"
+                               placeholder="Email">
+                        <span class="error" ng-show="modifyEmailForm.$error.available">This email already exists</span>
+                        <span class="error" ng-show="modifyEmailForm.$error.email">Invalid email</span>
+                    </div>
+                    <button ng-disabled="!modifyEmailForm.$valid" class="btn btn-default" ng-click="modifyEmail()">Change email</button>
+                </form>
+                <form class="form-inline" name="modifyPassworForm">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input ng-focus="initResult()" type="password" class="form-control" required ng-model="modifiedUser.password"
+                               ng-minlength="4" ng-maxlength="16" placeholder="Password">
+                        <span class="error" ng-show="modifyPassworForm.$error.minlength || modifyPassworForm.$error.maxlength">Password should have between 4 and 16 characters</span>
+                    </div>
+                    <button ng-disabled="!modifyPassworForm.$valid" class="btn btn-default" ng-click="modifyPassword()">
+                        Change password
+                    </button>
+                </form>
+                <div ng-show="result.success">Your modifications was applied</div>
+                <div ng-show="result.error">Something was wrong. Please check your modifications</div>
+            </div>
         </li>
     </ul>
     <form class="form-inline" name="createUserForm">
@@ -21,7 +47,7 @@
             <label for="password">Password</label>
             <input type="password" class="form-control" required id="password" ng-model="newUser.password"
                    ng-minlength="4" ng-maxlength="16" placeholder="Password">
-            <span class="error" ng-show="createUserForm.$error.minlength">Password should have between 4 and 16 characters</span>
+            <span class="error" ng-show="createUserForm.$error.minlength || createUserForm.$error.maxlength">Password should have between 4 and 16 characters</span>
         </div>
         <button ng-disabled="!createUserForm.$valid" class="btn btn-default" ng-click="addNewUser()">Add</button>
     </form>
