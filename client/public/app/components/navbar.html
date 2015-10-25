@@ -1,0 +1,6 @@
+<div class="header">
+    <ul class="nav nav-pills pull-right">
+        <li ng-class="{active:isActive('/')}"><a href="#/">Temperatures</a></li>
+        <li ng-if="user.isAdmin" ng-class="{active:isActive('#/users')}"><a href="#/users">Users</a></li>
+    </ul>
+</div>

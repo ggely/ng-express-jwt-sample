@@ -1,13 +1,15 @@
 'use strict';
 
 angular.module('logienApp', [
+    'logienApp.services',
     'logienApp.login',
     'logienApp.home',
+    'logienApp.users',
+    'logienApp.navbar',
     'ui.router',
     'ngResource',
     'angular-storage',
     'angular-jwt'
-
 ])
     .config(function myAppConfig($urlRouterProvider, jwtInterceptorProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');

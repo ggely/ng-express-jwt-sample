@@ -7,13 +7,22 @@ var User = mongoose.model('User');
 
 function isAuthenticated() {
     return function (req, res, next) {
-        if (!req.headers.auth_token) {
-            res.status(401).send('Unauthorized');
+
+        if (!req.headers.authorization) {
+            return res.status(401).send('Unauthorized');
+        }
+        var token = req.headers.authorization.replace('Bearer ', '');
+        var decoded;
+        try {
+            decoded = jwt.decode(token, config.tokenSecret);
+        }
+        catch (err) {
+            return res.status(401).send('Unauthorized');
         }
 
-        var decoded = jwt.decode(req.headers.auth_token, config.tokenSecret);
-
-        if(!decoded || !decoded.email){res.status(401).send('Unauthorized');}
+        if (!decoded || !decoded.email) {
+            res.status(401).send('Unauthorized');
+        }
         var options = {
             criteria: {email: decoded.email},
             select: 'email isAdmin'

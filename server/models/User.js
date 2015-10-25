@@ -27,10 +27,6 @@ UserSchema
         return this._password;
     });
 
-var validatePresenceOf = function (value) {
-    return value && value.length;
-};
-
 UserSchema.path('isAdmin').validate(function (isAdmin, next) {
     if (!isAdmin) {
         next(true);
@@ -66,8 +62,12 @@ UserSchema.path('email').validate(function (email, fn) {
 }, 'Email already exists');
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-    return hashed_password && hashed_password.length && this._password && this._password.length;
-}, 'Password cannot be blank');
+    var res = hashed_password && hashed_password.length && this._password && this._password.length;
+    if(this._password){
+        res = res && this._password.length>=4 && this._password.length<=16
+    }
+    return res;
+}, 'Password should be between 4 and 16 characters');
 
 
 /**

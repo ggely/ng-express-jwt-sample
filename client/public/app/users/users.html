@@ -1,0 +1,28 @@
+<div class="home">
+    <div class="jumbotron centered">
+        <h1>Personal Temperature Tracker</h1>
+        <navbar></navbar>
+    </div>
+    <ul class="list-group">
+        <!-- Loop over players using ng-repeat -->
+        <li class="list-group-item" ng-repeat="user in users">
+            {{user.email}}
+        </li>
+    </ul>
+    <form class="form-inline" name="createUserForm">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" required available validate-email ng-model="newUser.email"
+                   id="email" placeholder="Email">
+            <span class="error" ng-show="createUserForm.$error.available">This email already exists</span>
+            <span class="error" ng-show="createUserForm.$error.email">Invalid email</span>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" required id="password" ng-model="newUser.password"
+                   ng-minlength="4" ng-maxlength="16" placeholder="Password">
+            <span class="error" ng-show="createUserForm.$error.minlength">Password should have between 4 and 16 characters</span>
+        </div>
+        <button ng-disabled="!createUserForm.$valid" class="btn btn-default" ng-click="addNewUser()">Add</button>
+    </form>
+</div>

@@ -11,6 +11,6 @@ module.exports.clearUser = function (done) {
 };
 module.exports.app = app;
 module.exports.createToken = function (email, password) {
-    return jwt.encode({email: email, hashed_password: password}, config.tokenSecret);
+    return 'Bearer '+jwt.encode({email: email, hashed_password: password}, config.tokenSecret);
 };
 

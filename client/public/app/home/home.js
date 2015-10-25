@@ -1,7 +1,6 @@
-angular.module( 'logienApp.home', [
-    'ui.router',
-    'angular-storage',
-    'angular-jwt'
+angular.module('logienApp.home', [
+    'logienApp.navbar',
+    'ui.router'
 ])
     .config(function($stateProvider) {
         $stateProvider.state('home', {
