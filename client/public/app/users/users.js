@@ -19,7 +19,7 @@ angular.module('logienApp.users', [
         $scope.initResult = function () {
             $scope.result = {success: false, error: false};
         };
-        var initModifiedUser = function () {
+        $scope.initModifiedUser = function () {
             if ($scope.selectedUser) {
                 $scope.modifiedUser = {_id: $scope.selectedUser._id, email: $scope.selectedUser.email, password: ''};
             } else {
@@ -40,7 +40,7 @@ angular.module('logienApp.users', [
         $scope.select = function (user) {
             if ($scope.selectedUser._id !== user._id) {
                 $scope.selectedUser = user;
-                initModifiedUser();
+                $scope.initModifiedUser();
                 $scope.initResult();
             }
         };
@@ -50,7 +50,7 @@ angular.module('logienApp.users', [
                 Users.save($scope.modifiedUser,
                     function (value) {
                         $scope.selectedUser.email = $scope.modifiedUser.email;
-                        initModifiedUser();
+                        $scope.initModifiedUser();
                         $scope.initResult();
                         success();
                     },
@@ -66,7 +66,7 @@ angular.module('logienApp.users', [
                 $scope.selectedUser.password = $scope.modifiedUser.password;
                 Users.save($scope.selectedUser,
                     function (value) {
-                        initModifiedUser();
+                        $scope.initModifiedUser();
                         $scope.initResult();
                         success();
                     },
@@ -88,7 +88,7 @@ angular.module('logienApp.users', [
             });
         };
 
-        initModifiedUser();
+        $scope.initModifiedUser();
         $scope.initResult();
         refreshList();
 

@@ -13,13 +13,13 @@ angular.module('logienApp.settings', [
     })
     .controller('SettingsCtrl', function UsersCtrl($scope, Users) {
         $scope.me = Users.get({controller: 'me'}, function(){
-            initModifiedUser();
+            $scope.initUser();
         });
 
         $scope.initResult = function () {
             $scope.result = {success: false, error: false};
         };
-        var initModifiedUser = function () {
+        $scope.initUser = function () {
             $scope.modifiedUser = {_id : $scope.me._id,email: $scope.me.email, password: ''};
         };
 
@@ -32,12 +32,12 @@ angular.module('logienApp.settings', [
             $scope.result.success = false;
             $scope.result.error = true;
         };
-
+        
         $scope.modifyEmail = function () {
             Users.save($scope.modifiedUser,
                 function (value) {
                     $scope.me.email = $scope.modifiedUser.email;
-                    initModifiedUser();
+                    $scope.initUser();
                     $scope.initResult();
                     success();
                 },
@@ -50,7 +50,7 @@ angular.module('logienApp.settings', [
         $scope.modifyPassword = function () {
             Users.save($scope.modifiedUser,
                 function (value) {
-                    initModifiedUser();
+                    $scope.initUser();
                     $scope.initResult();
                     success();
                 },
