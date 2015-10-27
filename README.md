@@ -21,6 +21,9 @@ $ grunt serve
 
 connect in localhost:3000
 
+Login : admin@admin.com
+Password : admin
+
 ## Deploy in production
 $ grunt build
 $ node . MONGODB_URL=url_of_mongo TOKEN=MySecretToken
