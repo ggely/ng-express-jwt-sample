@@ -4,15 +4,8 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
 describe('Users', function (done) {
-    var adminToken;
     before(function (done) {
-        var createAdminToken = function () {
-            User.findOne({'isAdmin': true}, function (err, user) {
-                adminToken = helper.createOAuthToken(user._id, 'admin@admin.com');
-                done();
-            });
-        };
-        helper.waitInit(createAdminToken);
+        helper.waitInit(done);
     });
 
     describe('POST /api/users/login', function () {
@@ -85,7 +78,7 @@ describe('Users', function (done) {
             user.save(function (err, result) {
                 request(helper.app)
                     .get('/api/users')
-                    .set('Authorization', adminToken)
+                    .set('Authorization', helper.getAdminToken())
                     .send()
                     .expect(function (res) {
                         return res.body.length == 1;
@@ -133,7 +126,7 @@ describe('Users', function (done) {
         it('get the user', function (done) {
             request(helper.app)
                 .get('/api/users/' + id)
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send()
                 .expect({"_id": id + '', "isAdmin": false, "email": "foo2@test.com"})
                 .end(done)
@@ -178,7 +171,7 @@ describe('Users', function (done) {
         it('create the user', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'test@test.com',
                     password: 'test'
@@ -196,7 +189,7 @@ describe('Users', function (done) {
         it('create the user and admin field in immutable', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'test2@test.com',
                     password: 'test',
@@ -220,7 +213,7 @@ describe('Users', function (done) {
             user.save(function (err, result) {
                 request(helper.app)
                     .post('/api/users')
-                    .set('Authorization', adminToken)
+                    .set('Authorization', helper.getAdminToken())
                     .send({
                         email: 'existing@test.com',
                         password: 'foobar'
@@ -232,7 +225,7 @@ describe('Users', function (done) {
         it('failed if email invalid', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'invalid@test',
                     password: 'foobar'
@@ -243,7 +236,7 @@ describe('Users', function (done) {
         it('failed if email password <= 4', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'toohort@test',
                     password: 'foo'
@@ -254,7 +247,7 @@ describe('Users', function (done) {
         it('failed if email password => 16', function (done) {
             request(helper.app)
                 .post('/api/users')
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'toolong@test',
                     password: '12345678901234567'
@@ -265,7 +258,7 @@ describe('Users', function (done) {
         after(function (done) {
             helper.clearUser(done);
         });
-    })
+    });
     describe('POST /api/users/{:id}', function () {
         var id;
         before(function (done) {
@@ -302,7 +295,7 @@ describe('Users', function (done) {
         it('Modify the user', function (done) {
             request(helper.app)
                 .post('/api/users/' + id)
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'test@test.com',
                     password: 'test'
@@ -317,7 +310,7 @@ describe('Users', function (done) {
         it('Modify the user and admin field in immutable', function (done) {
             request(helper.app)
                 .post('/api/users/' + id)
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'immutableAdmin@test.com',
                     password: 'test',
@@ -338,7 +331,7 @@ describe('Users', function (done) {
             user.save(function (err, result) {
                 request(helper.app)
                     .post('/api/users/' + id)
-                    .set('Authorization', adminToken)
+                    .set('Authorization', helper.getAdminToken())
                     .send({
                         email: 'existing@test.com',
                         password: 'foobar'
@@ -355,7 +348,7 @@ describe('Users', function (done) {
             user.save(function (err, result) {
                 request(helper.app)
                     .post('/api/users/' + result._id)
-                    .set('Authorization', adminToken)
+                    .set('Authorization', helper.getAdminToken())
                     .send({
                         email: 'sameEmail@test.com',
                         password: 'test'
@@ -387,7 +380,7 @@ describe('Users', function (done) {
             user.save(function (err, result) {
                 request(helper.app)
                     .post('/api/users/' + result._id)
-                    .set('Authorization', adminToken)
+                    .set('Authorization', helper.getAdminToken())
                     .send({
                         email: 'samePassword2@test.com'
                     })
@@ -398,7 +391,7 @@ describe('Users', function (done) {
         it('failed if email invalid', function (done) {
             request(helper.app)
                 .post('/api/users/' + id)
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'invalid@test',
                     password: 'foobar'
@@ -409,7 +402,7 @@ describe('Users', function (done) {
         it('failed if email password <= 4', function (done) {
             request(helper.app)
                 .post('/api/users/' + id)
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'toohort@test',
                     password: 'foo'
@@ -420,7 +413,7 @@ describe('Users', function (done) {
         it('failed if email password => 16', function (done) {
             request(helper.app)
                 .post('/api/users/' + id)
-                .set('Authorization', adminToken)
+                .set('Authorization', helper.getAdminToken())
                 .send({
                     email: 'toolong@test',
                     password: '12345678901234567'
@@ -431,5 +424,102 @@ describe('Users', function (done) {
         after(function (done) {
             helper.clearUser(done);
         });
-    })
+    });
+    describe('POST /api/users/:id/cities', function () {
+        it('addCity', function (done) {
+            var user = new User({
+                email: 'user@test.com',
+                password: 'foobar'
+            });
+            user.save(function (err, result) {
+                request(helper.app)
+                    .post('/api/users/' + result._id + '/cities')
+                    .set('Authorization', helper.createOAuthToken(result._id, 'user@test.com'))
+                    .send({
+                        ref: 2980586,
+                        name: "Sainte-Foy-les-Lyon",
+                        country: "FR",
+                        coord: {
+                            lon: 4.79688,
+                            lat: 45.736919
+                        }
+                    })
+                    .expect(200)
+                    .expect(function (res) {
+                        res.body._id = 'id';
+                    })
+                    .expect({
+                        _id: 'id',
+                        ref: 2980586,
+                        name: "Sainte-Foy-les-Lyon",
+                        country: "FR",
+                        coord: {
+                            lon: 4.79688,
+                            lat: 45.736919
+                        }
+                    })
+                    .end(done)
+            });
+        });
+        after(function (done) {
+            helper.clearUser(done);
+        });
+    });
+    describe('GET /api/users/:id/cities', function () {
+        it('addCity', function (done) {
+            var user = new User({
+                email: 'user@test.com',
+                password: 'foobar'
+            });
+            var user_id;
+
+            var addCity = function (cb) {
+                request(helper.app)
+                    .post('/api/users/' + user_id + '/cities')
+                    .set('Authorization', helper.createOAuthToken(user_id, 'user@test.com'))
+                    .send({
+                        ref: 2980586,
+                        name: "Sainte-Foy-les-Lyon",
+                        country: "FR",
+                        coord: {
+                            lon: 4.79688,
+                            lat: 45.736919
+                        }
+                    })
+                    .end(cb)
+            };
+
+            var getCities = function () {
+                request(helper.app)
+                    .get('/api/users/' + user_id + '/cities')
+                    .set('Authorization', helper.createOAuthToken(user_id, 'user@test.com'))
+                    .send()
+                    .expect(200)
+                    .expect(function (res) {
+                        res.body[0]._id = 'id';
+                    })
+                    .expect([{
+                        _id: 'id',
+                        ref: 2980586,
+                        name: "Sainte-Foy-les-Lyon",
+                        country: "FR",
+                        coord: {
+                            lon: 4.79688,
+                            lat: 45.736919
+                        }
+                    }])
+                    .end(done)
+            };
+
+            user.save(function (err, result) {
+                user_id = result._id;
+                addCity( getCities);
+
+            });
+        });
+        after(function (done) {
+            helper.clearUser(done);
+        });
+    });
+
 });

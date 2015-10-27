@@ -11,5 +11,7 @@ router.post('/', auth.isAdmin(), controller.createUser);
 router.get('/email', auth.isAdminOrIdem(), controller.validateEmail);
 router.get('/:id', auth.isAdmin(), controller.getUser);
 router.post('/:id', auth.isAdmin(), controller.modifyUser);
+router.post('/:id/cities', auth.isLoggedUser(), controller.addCity);
+router.get('/:id/cities', auth.isLoggedUser(), controller.getCities);
 
 module.exports = router;

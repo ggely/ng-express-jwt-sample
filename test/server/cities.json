@@ -1,0 +1,128 @@
+[
+  {
+    "ref": 6455259,
+    "name": "Paris",
+    "country": "FR",
+    "coord": {
+      "lon": 2.35236,
+      "lat": 48.856461
+    }
+  },
+  {
+    "ref": 6077243,
+    "name": "Montreal",
+    "country": "CA",
+    "coord": {
+      "lon": -73.587807,
+      "lat": 45.508839
+    }
+  },
+  {
+    "ref": 2980586,
+    "name": "Sainte-Foy-les-Lyon",
+    "country": "FR",
+    "coord": {
+      "lon": 4.79688,
+      "lat": 45.736919
+    }
+  },
+  {
+    "ref": 6433124,
+    "name": "Saint-Pierre-des-Corps",
+    "country": "FR",
+    "coord": {
+      "lon": 0.73333,
+      "lat": 47.383331
+    }
+  },
+  {
+    "ref": 2977491,
+    "name": "Saint-Pierre-des-Corps",
+    "country": "FR",
+    "coord": {
+      "lon": 0.74849,
+      "lat": 47.38623
+    }
+  },
+  {
+    "ref": 2978100,
+    "name": "Saint-Maximin-la-Sainte-Baume",
+    "country": "FR",
+    "coord": {
+      "lon": 5.86219,
+      "lat": 43.452141
+    }
+  },
+  {
+    "ref": 2978317,
+    "name": "Saint-Martin-dHeres",
+    "country": "FR",
+    "coord": {
+      "lon": 5.76337,
+      "lat": 45.165279
+    }
+  },
+  {
+    "ref": 2979316,
+    "name": "Saint-Jean-de-la-Ruelle",
+    "country": "FR",
+    "coord": {
+      "lon": 1.86483,
+      "lat": 47.91127
+    }
+  },
+  {
+    "ref": 2979341,
+    "name": "Saint-Jean-de-Braye",
+    "country": "FR",
+    "coord": {
+      "lon": 1.97705,
+      "lat": 47.913029
+    }
+  },
+  {
+    "ref": 2980097,
+    "name": "Saint-Fons",
+    "country": "FR",
+    "coord": {
+      "lon": 4.86057,
+      "lat": 45.708801
+    }
+  },
+  {
+    "ref": 2980340,
+    "name": "Saintes",
+    "country": "FR",
+    "coord": {
+      "lon": -0.63333,
+      "lat": 45.75
+    }
+  },
+  {
+    "ref": 2980586,
+    "name": "Sainte-Foy-les-Lyon",
+    "country": "FR",
+    "coord": {
+      "lon": 4.79688,
+      "lat": 45.736919
+    }
+  },
+  {
+    "ref": 2980636,
+    "name": "Saint-Egreve",
+    "country": "FR",
+    "coord": {
+      "lon": 5.68333,
+      "lat": 45.23333
+    }
+  },
+  {
+    "ref": 2980827,
+    "name": "Saint-Die-des-Vosges",
+    "country": "FR",
+    "coord": {
+      "lon": 6.95,
+      "lat": 48.283329
+    }
+  }
+]
