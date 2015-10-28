@@ -44,7 +44,7 @@ angular.module('logienApp.home', [
             $scope.searchResult = {error: false, cities: [], count: 0};
             if ($scope.searchCity.length >= 2) {
                 Cities.query({name: $scope.searchCity}, function (data) {
-                    $scope.searchResult = {error: false, cities: data, count: data.count}
+                    $scope.searchResult = {error: false, cities: data, count: data.length}
                 }, function () {
                     $scope.searchResult = {error: true, cities: [], count: 0};
                 })
@@ -58,12 +58,12 @@ angular.module('logienApp.home', [
         };
 
         $scope.addCity = function (city) {
-            if (!$scope.isAFollowedCity(city))
+            if (!$scope.isAFollowedCity(city)) {
                 Users.addCity({id: $scope.me._id}, city, function () {
                     $scope.cities.push(city);
                     init();
                     Storage.loadCityData([city.ref]);
                 });
-
+            }
         };
     });
