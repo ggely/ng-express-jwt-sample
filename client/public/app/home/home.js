@@ -14,6 +14,7 @@ angular.module('logienApp.home', [
     })
     .controller('HomeCtrl', function HomeController($scope, Users, Storage, Cities) {
         $scope.selectedCityInfo;
+        $scope.Math = window.Math;
 
         var init = function () {
             $scope.tab = 'cities';
@@ -28,7 +29,11 @@ angular.module('logienApp.home', [
                 var ids = cities.map(function (city) {
                     return city.ref;
                 });
-                Storage.loadCityData(ids);
+                Storage.loadCityData(ids, function (count) {
+                    if (count !== 0) {
+                        $scope.select($scope.cities[0]);
+                    }
+                });
             });
         });
 

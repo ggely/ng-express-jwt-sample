@@ -1,0 +1,27 @@
+.current-weather .temperature-area {
+    width: 290px;
+    height: 123px;
+    float: left;
+}
+.current-weather .weather-icon, .airport-weather-info .current-weather .weather-icon {
+    float: left;
+    width: 96px;
+    height: 96px;
+    margin-right: 15px;
+}
+.current-weather .temperature, .airport-weather-info .current-weather .temperature {
+    font-size: 90px;
+    line-height: 85px;
+    text-indent: -4px;
+    letter-spacing: -8px;
+    font-family: 'DIN-Medium',sans-serif;
+    height: 70px;
+}
+.current-weather .temperature span, .airport-weather-info .current-weather .temperature span {
+    font-size: 24px;
+    position: relative;
+    bottom: 48px;
+    left: 3px;
+    letter-spacing: 0;
+    font-family: 'DIN-Regular',sans-serif;
+}

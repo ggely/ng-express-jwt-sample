@@ -6,6 +6,10 @@
     "populate-prod": "set CITIES_PATH=./city.list.json &&  set NODE_ENV=prod && node prod_tasks/loadCities.js",
     "populate-dev": "set CITIES_PATH=./city.list.sample.json &&  node prod_tasks/loadCities.js",
     "populate-dev-full": "set CITIES_PATH=./city.list.json &&  node prod_tasks/loadCities.js"
+
+    "wpopulate-prod": "set CITIES_PATH=./city.list.json &&  set NODE_ENV=prod && node prod_tasks/loadCities.js",
+    "wpopulate-dev": "set CITIES_PATH=./city.list.sample.json &&  node prod_tasks/loadCities.js",
+    "wpopulate-dev-full": "set CITIES_PATH=./city.list.json &&  node prod_tasks/loadCities.js"
   },
   "dependencies": {
     "body-parser": "^1.14.1",

@@ -57,7 +57,7 @@ module.exports = function (grunt) {
                 src: ['dist/public/**/*.html', 'dist/public/**/*.js'],
                 ignorePath: '../../client/public/',
                 exclude: ['bootstrap.js', '/json3/', '/es5-shim/']
-            },
+            }
         },
         injector: {
             options: {},
@@ -65,7 +65,7 @@ module.exports = function (grunt) {
                 options: {
                     transform: function (filePath) {
                         filePath = filePath.replace('/dist/public', '');
-                        return '<script src="' + filePath + '"></script>';
+                        return '<script src="' + filePath + '"></script>"';
                     },
                     starttag: '<!-- injector:js -->',
                     endtag: '<!-- endinjector -->'
@@ -76,6 +76,23 @@ module.exports = function (grunt) {
                             'dist/public/{app,components}/**/*.js',
                             '!dist/public/**/*.spec.js',
                             '!dist/public/**/*.mock.js'
+                        ]
+                    ]
+                }
+            },
+            css: {
+                options: {
+                    transform: function (filePath) {
+                        filePath = filePath.replace('/dist/public', '');
+                        return '<link rel="stylesheeT" href="' + filePath + '"></script>';
+                    },
+                    starttag: '<!-- injector:css -->',
+                    endtag: '<!-- endinjector -->'
+                },
+                files: {
+                    'dist/public/index.html': [
+                        [
+                            'dist/public/{app,components}/**/*.css'
                         ]
                     ]
                 }

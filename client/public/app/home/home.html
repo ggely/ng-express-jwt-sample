@@ -24,7 +24,6 @@
                     </li>
                 </ul>
                 <div ng-show="tab=='search'">
-                    <br>
                     <form class="form-inline" name="searchCityForm">
                         <div class="form-group">
                             <label for="city">City name</label>
@@ -34,31 +33,72 @@
                         </div>
                     </form>
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="city in searchResult.cities">
-                            <div>{{city.name}}, {{city.country}}
-                                <span class="glyphicon glyphicon-plus"
-                                      ng-click="addCity(city)"
-                                      ng-show="!isAFollowedCity(city)"></span></div>
+                        <li class="list-group-item" ng-repeat="city in searchResult.cities" ng-click="addCity(city)"
+                            ng-show="!isAFollowedCity(city)">
+                            <div>{{city.name}}, {{city.country}}</div>
                         </li>
                     </ul>
                 </div>
             </section>
-            <div class="col-sm-8" ng-show="selectedCityInfo">
+            <div class="col-sm-8" >
                 <h4>{{selectedCityInfo.city.name}}, {{selectedCityInfo.city.country}} </h4>
                 <ul class="nav nav-tabs">
-                    <li ><a>4 last days</a></li>
+                    <li><a>4 last days</a></li>
                     <li class="active"><a>Current weather</a></li>
-                    <li ><a>5 next days</a></li>
+                    <li><a>5 next days</a></li>
                 </ul>
                 <div>
-                  <div>{{selectedCityInfo.infos.current.weather[0].main}} : {{selectedCityInfo.infos.current.weather[0].description}}</div>
-                  <div>Temperature : {{selectedCityInfo.infos.current.main.temp}} C </div>
-                  <div>Wind : {{selectedCityInfo.infos.current.wind.speed}} km/h </div>
-                </div>
-            </div>
+                    <div class="current-weather clearfix">
+                        <div class="current-weather-wrap">
+                            <div class="temperature-area clearfix">
+                                <p class="condition">{{selectedCityInfo.infos.current.weather[0].description}}</p>
 
+                                <div>
+                                    <div class="weather-icon">
+                                        <p>
+                                            <img ng-src="http://openweathermap.org/img/w/{{selectedCityInfo.infos.current.weather[0].icon}}.png"
+                                                 alt="{{selectedCityInfo.infos.current.weather[0].description}}">
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="temperature">
+                                            {{Math.round(selectedCityInfo.infos.current.main.temp)}}<span>°C</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detailed-reports clearfix">
+                        <div class="detailed-metrics clearfix"><!--googleoff: all-->
+                            <div class="wind first">
+                                <span>{{selectedCityInfo.infos.current.wind.speed}}<em>km/h</em></span>
+
+                                <p class="metric">Vents</p>
+                            </div>
+                            <div class="humidity"><span>{{selectedCityInfo.infos.current.main.humidity}}%</span>
+
+                                <p class="metric">Humidité</p>
+                            </div>
+                            <div class="pressure">
+                                <span>{{selectedCityInfo.infos.current.main.pressure}}<em>Pa</em></span>
+
+                                <p class="metric">Pression</p>
+                            </div>
+                            <div class="rain"><span>{{selectedCityInfo.infos.current.rain['3h']}}<em>mm/3h</em></span>
+
+                                <p class="metric">Précipitation</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
+
     </div>
+</div>
 
 </div>
 

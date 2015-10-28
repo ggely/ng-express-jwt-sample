@@ -81,12 +81,17 @@ angular.module('logienApp.services', [])
 
             $provide.service('Storage', function (WeatherApi) {
                 var datas = this.datas = {};
-                this.loadCityData = function (ids) {
+                this.loadCityData = function (ids, cb) {
                     if (ids && ids.length) {
+                        var count=0;
                         ids.forEach(function (id) {
                             WeatherApi.getForecast(id, function (data) {
                                 datas[id] = datas[id] || {};
                                 datas[id].forecast = data;
+                                if(datas[id].current){
+                                    count++;
+                                    if(count==ids.length){cb(count)}
+                                }
                             });
                             /*   WeatherApi.getHistory(id, function (data) { //invalid key
                              datas[id] = datas[id] || {};
@@ -95,6 +100,10 @@ angular.module('logienApp.services', [])
                             WeatherApi.getCurrent(id, function (data) {
                                 datas[id] = datas[id] || {};
                                 datas[id].current = data;
+                                if(datas[id].forecast){
+                                    count++;
+                                    if(count==ids.length){cb(count)}
+                                }
                             })
                         })
                     }

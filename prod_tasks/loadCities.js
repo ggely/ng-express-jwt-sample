@@ -8,10 +8,11 @@ if (process.env.CITIES_PATH) {
     City.collection.remove(function (err) {
         if (err) throw err;
 
-        fs.readFile(join(__dirname,'../' ,process.env.CITIES_PATH.trim()), 'utf8', function (err, data) {
+        fs.readFile(join(__dirname, '../', process.env.CITIES_PATH.trim()), 'utf8', function (err, data) {
             if (err) throw err;
             var cities = JSON.parse(data);
-            City.collection.insert(cities, function (err, user) {
+            City.collection.insert(cities, function (err) {
+                if (err) throw new Error(err);
                 console.log("Import success");
                 process.exit()
             });
