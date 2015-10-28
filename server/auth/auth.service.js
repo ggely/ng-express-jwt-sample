@@ -55,7 +55,7 @@ function isLoggedUser() {
         .use(isAuthenticated())
         .use(function validate(req, res, next) {
             if (req.query._id && req.query._id === req.user._id) return next();
-            if (req.params.id && req.params.id === req.user.id) return next();
+            if (req.params.id && req.params.id == req.user._id) return next();
             res.status(403).send('Forbidden');
         });
 }
@@ -65,7 +65,7 @@ function isAdminOrIdem() {
         .use(function validate(req, res, next) {
             if (req.user.isAdmin) return next();
             if (req.query._id && req.query._id === req.user._id) return next();
-            if (req.params.id && req.params.id === req.user._id) return next();
+            if (req.params.id && req.params.id == req.user._id) return next();
             res.status(403).send('Forbidden');
         });
 }

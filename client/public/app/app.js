@@ -39,6 +39,4 @@ angular.module('logienApp', [
                 $scope.pageTitle = nextRoute.$$route.pageTitle + ' | ngEurope Sample';
             }
         });
-    })
-
-;
+    });
