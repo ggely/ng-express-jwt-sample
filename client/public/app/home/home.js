@@ -12,8 +12,8 @@ angular.module('logienApp.home', [
             }
         });
     })
-    .controller('HomeCtrl', function HomeController($scope, Users, WeatherApi, Cities) {
-        $scope.selectedCity;
+    .controller('HomeCtrl', function HomeController($scope, Users, Storage, Cities) {
+        $scope.selectedCityInfo;
 
         var init = function () {
             $scope.tab = 'cities';
@@ -24,7 +24,12 @@ angular.module('logienApp.home', [
         init();
 
         $scope.me = Users.get({controller: 'me'}, function () {
-            $scope.cities = Users.getCities({id: $scope.me._id});
+            $scope.cities = Users.getCities({id: $scope.me._id}, function (cities) {
+                var ids = cities.map(function (city) {
+                    return city.ref;
+                });
+                Storage.loadCityData(ids);
+            });
         });
 
         $scope.changeTab = function (name) {
@@ -32,7 +37,7 @@ angular.module('logienApp.home', [
         };
 
         $scope.select = function (city) {
-            $scope.selectedCity = city;
+            $scope.selectedCityInfo = {city: city, infos: Storage.getCityData(city.ref)};
         };
 
         $scope.findCity = function () {
@@ -57,6 +62,7 @@ angular.module('logienApp.home', [
                 Users.addCity({id: $scope.me._id}, city, function () {
                     $scope.cities.push(city);
                     init();
+                    Storage.loadCityData([city.ref]);
                 });
 
         };

@@ -21,37 +21,87 @@ angular.module('logienApp.services', [])
             return $resource('/api/cities/');
         });
 
-        $provide.factory('WeatherApi', ['$http', function ($http) {
-            var config = {
-                headers: {
-                    'Access-Control-Request-Headers': '',
-                }
-            };
-
+        $provide.factory('WeatherApi', function () {
             return {
-                get: function (params, success, error) {
-                    params.mode = 'json';
-                    params.APPID = '4684ab8beca5ebad3bfead2d1505a663';
-                    $http.get({
+                getForecast: function (id, success, error) {
+                    $.ajax({
                         url: 'http://api.openweathermap.org/data/2.5/forecast',
-                        params: params,
-                        method: 'GET'
-                    }, config).
-                        success(success).
-                        error(error);
+                        data: {id: id, APPID: '50f333d54cf1024253df432c0316ad2b', units: 'metric'},
+                        type: "GET",
+                        success: function (data) {
+                            success(data)
+                        },
+                        error: function (err) {
+                            if (error) error(err);
+                        }
+                    });
                 },
-                findCity: function (params, success, error) {
-                    params.mode = 'json';
-                    params.APPID = 'bd82977b86bf27fb59a04b61b657fb6f';
-                    params._ = '1445917532233';
-                    params.type = 'like';
-                    params.sort = 'population';
-                    params.cnt = 30;
-                    $http.get({url: 'http://api.openweathermap.org/data/2.5/find', params: params, method: 'GET'}, config).
-                        success(success).
-                        error(error);
+                getHistory: function (id, success, error) {
+                    var start = new Date();
+                    var end = new Date(start);
+                    end.setDate(end.getDate() - 5);
+                    end = Math.floor(end.getTime() / 1000);
+                    start = Math.floor(start.getTime() / 1000);
+                    $.ajax({
+                        url: 'http://api.openweathermap.org/data/2.5/history/city',
+                        data: {
+                            id: id,
+                            APPID: '50f333d54cf1024253df432c0316ad2b',
+                            start: start,
+                            end: end,
+                            units: 'metric'
+                        },
+                        type: "GET",
+                        success: function (data) {
+                            success(data)
+                        },
+                        error: function (err) {
+                            if (error) error(err);
+                        }
+                    });
+                },
+                getCurrent: function (id, success, error) {
+                    var start = new Date();
+                    var end = new Date(start);
+                    end.setDate(end.getDate() - 5);
+                    $.ajax({
+                        url: 'http://api.openweathermap.org/data/2.5/weather',
+                        data: {id: id, APPID: '50f333d54cf1024253df432c0316ad2b', units: 'metric'},
+                        type: "GET",
+                        success: function (data) {
+                            success(data)
+                        },
+                        error: function (err) {
+                            if (error) error(err);
+                        }
+                    });
                 }
-            };
-        }]);
+            }
+        }),
+
+            $provide.service('Storage', function (WeatherApi) {
+                var datas = this.datas = {};
+                this.loadCityData = function (ids) {
+                    if (ids && ids.length) {
+                        ids.forEach(function (id) {
+                            WeatherApi.getForecast(id, function (data) {
+                                datas[id] = datas[id] || {};
+                                datas[id].forecast = data;
+                            });
+                            /*   WeatherApi.getHistory(id, function (data) { //invalid key
+                             datas[id] = datas[id] || {};
+                             datas[id].historic = data;
+                             });*/
+                            WeatherApi.getCurrent(id, function (data) {
+                                datas[id] = datas[id] || {};
+                                datas[id].current = data;
+                            })
+                        })
+                    }
+                };
+                this.getCityData = function (id) {
+                    return this.datas[id];
+                }
+            });
 
     }]);

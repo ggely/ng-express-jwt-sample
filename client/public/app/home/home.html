@@ -17,12 +17,14 @@
                     <li ng-class="tab=='cities' ? 'active' :''" ng-click="changeTab('cities')"><a>My cities</a></li>
                     <li ng-class="tab=='search' ? 'active' :''" ng-click="changeTab('search')"><a>Search</a></li>
                 </ul>
+                <br>
                 <ul class="list-group" ng-show="tab=='cities'">
                     <li class="list-group-item" ng-repeat="city in cities" ng-click="select(city)">
                         <div>{{city.name}}, {{city.country}}</div>
                     </li>
                 </ul>
                 <div ng-show="tab=='search'">
+                    <br>
                     <form class="form-inline" name="searchCityForm">
                         <div class="form-group">
                             <label for="city">City name</label>
@@ -41,11 +43,18 @@
                     </ul>
                 </div>
             </section>
-            <div class="col-sm-8">
+            <div class="col-sm-8" ng-show="selectedCityInfo">
+                <h4>{{selectedCityInfo.city.name}}, {{selectedCityInfo.city.country}} </h4>
                 <ul class="nav nav-tabs">
                     <li ><a>4 last days</a></li>
-                    <li class="active"><a>5 next days</a></li>
+                    <li class="active"><a>Current weather</a></li>
+                    <li ><a>5 next days</a></li>
                 </ul>
+                <div>
+                  <div>{{selectedCityInfo.infos.current.weather[0].main}} : {{selectedCityInfo.infos.current.weather[0].description}}</div>
+                  <div>Temperature : {{selectedCityInfo.infos.current.main.temp}} C </div>
+                  <div>Wind : {{selectedCityInfo.infos.current.wind.speed}} km/h </div>
+                </div>
             </div>
 
         </div>
