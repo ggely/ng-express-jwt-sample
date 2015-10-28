@@ -90,28 +90,29 @@ exports.getAllNonAdminUsers = function (req, res) {
 exports.addCity = function (req, res) {
     if (!req.body.ref) return res.status(400).send({error: "No city given"});
     User.findOne({
-        _id: req.params.id
+        _id: req.user._id
     }, 'followedCities', function (err, user) {
         if (err) return res.status(500).send({error: 'Enable to find users'});
 
         City.findOne({ref: req.body.ref}, function (err, city) {
             if (err) return res.status(500).send({error: "Unable to save city"});
 
-            var _getOrCreateFollowedCities = function(city){
-                FollowedCities.findOne({ref: req.body.ref}, function (err, followedCities) {
+            var _getOrCreateFollowedCities = function (city) {
+
+                FollowedCities.findOrCreateByUser(user, function (err, followedCities) {
+
                     if (err) return res.status(500).send({error: "Unable to save city"});
-                    if (!followedCities) {
-                        followedCities = new FollowedCities({
-                                user: user,
-                                cities: [city._id]
-                            });
-                    }else{
+
+                    if (followedCities.cities.indexOf(city._id) === -1) {
                         followedCities.cities.push(city._id);
+
+                        followedCities.save(function (err) {
+                            if (err) return res.status(500).send({error: "Unable to add city"});
+                            return res.json(city);
+                        });
+                    } else {
+                        return res.json(city);
                     }
-                    followedCities.save(function(err){
-                        if (err) return res.status(500).send({error: "Unable to add city"});
-                        res.json(city);
-                    })
                 });
             };
 
@@ -129,16 +130,15 @@ exports.addCity = function (req, res) {
 };
 exports.getCities = function (req, res) {
     User.findOne({
-        _id: req.params.id
+        _id: req.user._id
     }, function (err, user) {
         if (err) res.status(500).send({error: 'Enable to find user'});
 
         FollowedCities.load({
-            user : user._id
+            user: user._id
         }, function (err, followedCities) {
-           console.log(followedCities);
             if (err) res.status(500).send({error: 'Enable to find cities'});
-            if (!followedCities || !followedCities.cities)res.status(200).send([]);
+            if (!followedCities || !followedCities.cities) return res.status(200).send([]);
             res.json(followedCities.cities);
         });
     });

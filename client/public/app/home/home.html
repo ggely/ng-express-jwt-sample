@@ -6,3 +6,50 @@
         <navbar></navbar>
     </div>
 </nav>
+<div class="row-fluid">
+    <div class="col-xs-offset-1"><h2>Weather</h2></div>
+
+
+    <div class=" col-sm-10 col-md-8  col-sm-offset-1 col-md-offset-2 ">
+        <div class="row">
+            <section class="col-sm-4">
+                <ul class="nav nav-tabs">
+                    <li ng-class="tab=='cities' ? 'active' :''" ng-click="changeTab('cities')"><a>My cities</a></li>
+                    <li ng-class="tab=='search' ? 'active' :''" ng-click="changeTab('search')"><a>Search</a></li>
+                </ul>
+                <ul class="list-group" ng-show="tab=='cities'">
+                    <li class="list-group-item" ng-repeat="city in cities" ng-click="select(city)">
+                        <div>{{city.name}}, {{city.country}}</div>
+                    </li>
+                </ul>
+                <div ng-show="tab=='search'">
+                    <form class="form-inline" name="searchCityForm">
+                        <div class="form-group">
+                            <label for="city">City name</label>
+                            <input type="text" class="form-control" autocomplete="off" ng-model="searchCity"
+                                   ng-change="findCity()" id="city"
+                                   placeholder="London,UK">
+                        </div>
+                    </form>
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="city in searchResult.cities">
+                            <div>{{city.name}}, {{city.country}}
+                                <span class="glyphicon glyphicon-plus"
+                                      ng-click="addCity(city)"
+                                      ng-show="!isAFollowedCity(city)"></span></div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <div class="col-sm-8">
+                <ul class="nav nav-tabs">
+                    <li ><a>4 last days</a></li>
+                    <li class="active"><a>5 next days</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+

@@ -18,12 +18,16 @@ $ bower install
 
 ## Run in development
 $ grunt serve
-
+$ npm run populate-dev ou $ npm run populate-dev-full (to have all cities)
 connect in localhost:3000
 
 ## Deploy in production
 $ grunt build
+$ npm run populate-prod
 $ node . MONGODB_URL=url_of_mongo TOKEN=MySecretToken
+
+Login : admin@admin.com
+Password : admin
 
 ## Tests
 To test the server:
