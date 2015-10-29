@@ -11,7 +11,7 @@
 
 
     <div class=" col-sm-10 col-md-8  col-sm-offset-1 col-md-offset-2 ">
-        <div class="row">
+        <div class="row weather-wrap">
             <section class="col-sm-4">
                 <ul class="nav nav-tabs">
                     <li ng-class="tab=='cities' ? 'active' :''" ng-click="changeTab('cities')"><a>My cities</a></li>
@@ -40,60 +40,77 @@
                     </ul>
                 </div>
             </section>
-            <div class="col-sm-8" >
-                <h4>{{selectedCityInfo.city.name}}, {{selectedCityInfo.city.country}} </h4>
+            <div class="col-sm-8" ng-if="selectedCityInfo">
+                <h4 class="city-name">{{selectedCityInfo.city.name}}, {{selectedCityInfo.city.country}} </h4>
                 <ul class="nav nav-tabs">
-                    <li><a>4 last days</a></li>
-                    <li class="active"><a>Current weather</a></li>
-                    <li><a>5 next days</a></li>
+                    <li ng-class="weather=='current' ? 'active' :''" ng-click="changeWeather('current')"><a>Current
+                        weather</a></li>
+                    <li ng-class="weather=='forecast' ? 'active' :''" ng-click="changeWeather('forecast')"><a>5 next
+                        days </a></li>
                 </ul>
-                <div>
+                <div ng-show="weather=='current'">
                     <div class="current-weather clearfix">
                         <div class="current-weather-wrap">
                             <div class="temperature-area clearfix">
-                                <p class="condition">{{selectedCityInfo.infos.current.weather[0].description}}</p>
-
                                 <div>
                                     <div class="weather-icon">
                                         <p>
-                                            <img ng-src="http://openweathermap.org/img/w/{{selectedCityInfo.infos.current.weather[0].icon}}.png"
-                                                 alt="{{selectedCityInfo.infos.current.weather[0].description}}">
+                                            <img width="100" height="100"
+                                                 ng-src="http://openweathermap.org/img/w/{{selectedCityInfo.infos.current.icon}}.png"
+                                                 alt="{{selectedCityInfo.infos.current.description}}">
                                         </p>
                                     </div>
-                                    <div>
+                                    <div class="weather-text">
                                         <p class="temperature">
-                                            {{Math.round(selectedCityInfo.infos.current.main.temp)}}<span>°C</span>
+                                            {{selectedCityInfo.infos.current.temp}}<span>°C</span>
                                         </p>
+
+                                        <p class="condition">{{selectedCityInfo.infos.current.description}}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="detailed-reports clearfix">
-                        <div class="detailed-metrics clearfix"><!--googleoff: all-->
+                        <div class="detailed-metrics clearfix">
                             <div class="wind first">
-                                <span>{{selectedCityInfo.infos.current.wind.speed}}<em>km/h</em></span>
-
                                 <p class="metric">Vents</p>
+                                <span>{{selectedCityInfo.infos.current.wind}}<em>km/h</em></span>
                             </div>
-                            <div class="humidity"><span>{{selectedCityInfo.infos.current.main.humidity}}%</span>
-
+                            <div class="humidity">
                                 <p class="metric">Humidité</p>
+                                <span>{{selectedCityInfo.infos.current.humidity}}%</span>
                             </div>
                             <div class="pressure">
-                                <span>{{selectedCityInfo.infos.current.main.pressure}}<em>Pa</em></span>
-
                                 <p class="metric">Pression</p>
+                                <span>{{selectedCityInfo.infos.current.pressure}}<em>Pa</em></span>
                             </div>
-                            <div class="rain"><span>{{selectedCityInfo.infos.current.rain['3h']}}<em>mm/3h</em></span>
+                            <p class="metric">Précipitation</p>
 
-                                <p class="metric">Précipitation</p>
+                            <div class="rain">
+                                <span>{{selectedCityInfo.infos.current.precipitation}}<em>mm</em></span>
                             </div>
 
                         </div>
                     </div>
                 </div>
+                <div ng-show="weather=='forecast'">
+                    <div class="forecast-weather clearfix">
+                        <div class="forecast-weather-wrap">
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="forecast in selectedCityInfo.infos.forecast">
+                                    <div class="forecast-date">{{getDate(forecast.date)}}</div>
+                                    <div class="forecast-time"> {{getTime(forecast.date)}}h</div>
+                                    <div class="forecast-description">{{forecast.description}}</div>
+                                    <div class="forecast-temperature">{{forecast.temp}} <span>°C</span></div>
+                                    <div class="forecast-icon"><img ng-src="http://openweathermap.org/img/w/{{forecast.icon}}.png"
+                                              alt="{{forecast.description}}"></div>
+                                </li>
 
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

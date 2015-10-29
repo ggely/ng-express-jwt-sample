@@ -14,10 +14,18 @@ angular.module('logienApp.home', [
     })
     .controller('HomeCtrl', function HomeController($scope, Users, Storage, Cities) {
         $scope.selectedCityInfo;
-        $scope.Math = window.Math;
+        $scope.getDate = function (date) {
+            var formattedDate = new Date(date*1000);
+            return moment(formattedDate).format('D MMM');
+        };
+        $scope.getTime = function (date) {
+            var formattedDate = new Date(date*1000);
+            return moment(formattedDate).format('H');
+        };
 
         var init = function () {
             $scope.tab = 'cities';
+            $scope.weather = 'current';
             $scope.searchCity = '';
             $scope.searchResult = {error: false, cities: [], count: 0};
         };
@@ -29,10 +37,8 @@ angular.module('logienApp.home', [
                 var ids = cities.map(function (city) {
                     return city.ref;
                 });
-                Storage.loadCityData(ids, function (count) {
-                    if (count !== 0) {
-                        $scope.select($scope.cities[0]);
-                    }
+                Storage.loadCityData(ids).then(function () {
+                    $scope.select($scope.cities[0]);
                 });
             });
         });
@@ -40,9 +46,39 @@ angular.module('logienApp.home', [
         $scope.changeTab = function (name) {
             $scope.tab = name;
         };
+        $scope.changeWeather = function (name) {
+            $scope.weather = name;
+        };
+
 
         $scope.select = function (city) {
-            $scope.selectedCityInfo = {city: city, infos: Storage.getCityData(city.ref)};
+            if (city) {
+                var storageInfos = Storage.getCityData(city.ref);
+                var infos = {
+                    current: {
+                        icon: storageInfos.current.weather[0].icon,
+                        description: storageInfos.current.weather[0].description,
+                        temp: Math.round(storageInfos.current.main.temp),
+                        wind: storageInfos.current.wind.speed,
+                        humidity: storageInfos.current.main.humidity,
+                        pressure: storageInfos.current.main.pressure,
+                        precipitation: Math.round(((storageInfos.current.rain || {'3h': 0})['3h'] || 0) / 3)
+                    },
+                    forecast: []
+                };
+                storageInfos.forecast.list.forEach(function (elm) {
+                    var info = {
+                        date: elm.dt,
+                        icon: elm.weather[0].icon,
+                        description: elm.weather[0].description,
+                        temp: Math.round(elm.main.temp)
+                    };
+                    infos.forecast.push(info);
+                });
+
+
+                $scope.selectedCityInfo = {city: city, infos: infos};
+            }
         };
 
         $scope.findCity = function () {

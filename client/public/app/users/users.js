@@ -88,6 +88,15 @@ angular.module('logienApp.users', [
             });
         };
 
+        $scope.deleteUser = function () {
+            if ($scope.selectedUser) {
+                Users.delete({id: $scope.selectedUser._id}, function () {
+                    $scope.selectedUser = {};
+                    refreshList();
+                });
+            }
+        };
+
         $scope.initModifiedUser();
         $scope.initResult();
         refreshList();

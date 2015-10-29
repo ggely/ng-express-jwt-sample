@@ -1,0 +1,15 @@
+.user-wrap {
+    background-color: #B2CEE9;
+    min-height: 370px;
+    max-width: 800px;
+    min-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+
+.delete-user-btn {
+    float: right;
+    margin-top: 15px;
+    margin-right: 12px;
+}

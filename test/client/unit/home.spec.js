@@ -105,11 +105,32 @@ describe('Service: Storage', function () {
     };
 
     var cityInfos = {
-        forecastData: forecastData,
+        forecast: forecastData,
         current: current
     };
 
-    beforeEach(angular.mock.module('logienApp'));
+    var compiledCityInfos = {
+        current: {
+            icon: '01n',
+            description: 'Sky is Clear',
+            temp: 295,
+            wind: 3.42,
+            humidity: 100,
+            pressure: 1011.83,
+            precipitation: 0
+        },
+        forecast: [{
+            date: 1446044400,
+            icon: '10n',
+            description: 'light rain',
+            temp: 274
+        }, {
+            date: 1446055200,
+            icon: '01n',
+            description: 'sky is clear',
+            temp: 273
+        }]
+    };
 
 
     beforeEach(function (done) {
@@ -122,8 +143,13 @@ describe('Service: Storage', function () {
             $provide.value('Users', mockUsers);
         });
 
-        inject(function () {
+        inject(function (_$q_) {
+            $q = _$q_;
+
             mockStorage.loadCityData = function (ids) {
+                var deferred = $q.defer();
+                deferred.resolve();
+                return deferred.promise;
             };
             mockStorage.getCityData = function (id, success) {
                 return (cityInfos);
@@ -259,7 +285,7 @@ describe('Service: Storage', function () {
         };
 
         scope.select(city);
-        expect(scope.selectedCityInfo).toEqual({city: city, infos: cityInfos});
+        expect(scope.selectedCityInfo).toEqual({city: city, infos: compiledCityInfos});
         done()
 
 
@@ -299,7 +325,7 @@ describe('Service: Storage', function () {
     });
     it('could add city', function (done) {
         var city = {
-            _id:456,
+            _id: 456,
             "ref": 98651,
             "name": "Lyon",
             "country": "FR",
@@ -314,9 +340,9 @@ describe('Service: Storage', function () {
             expect(scope.cities[1].ref).toEqual(98651);
             done();
         };
-        scope.cities=[
+        scope.cities = [
             {
-                _id:498732,
+                _id: 498732,
                 "ref": 12345,
                 "name": "Paris",
                 "country": "FR",
@@ -332,7 +358,7 @@ describe('Service: Storage', function () {
     });
     it('could add only one time each city ', function (done) {
         var city = {
-            _id:498732,
+            _id: 498732,
             "ref": 98651,
             "name": "Lyon",
             "country": "FR",
@@ -347,9 +373,9 @@ describe('Service: Storage', function () {
             expect(scope.cities[0].ref).toEqual(12345);
             done();
         };
-        scope.cities=[
+        scope.cities = [
             {
-                _id:498732,
+                _id: 498732,
                 "ref": 12345,
                 "name": "Paris",
                 "country": "FR",
@@ -363,5 +389,6 @@ describe('Service: Storage', function () {
             validate()
         }, 300);
     });
-});
+})
+;
 

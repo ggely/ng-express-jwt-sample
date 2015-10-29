@@ -50,7 +50,13 @@ module.exports = function (grunt) {
                 cwd: 'client/public',
                 dest: 'dist/public',
                 src: ['{app,components}/**/*.css']
-            }
+            },
+            img: {
+                expand: true,
+                cwd: 'client/public/img',
+                dest: 'dist/public/img',
+                src: ['**/*']
+            },
         },
         wiredep: {
             target: {
@@ -65,7 +71,7 @@ module.exports = function (grunt) {
                 options: {
                     transform: function (filePath) {
                         filePath = filePath.replace('/dist/public', '');
-                        return '<script src="' + filePath + '"></script>"';
+                        return '<script src="' + filePath + '"></script>';
                     },
                     starttag: '<!-- injector:js -->',
                     endtag: '<!-- endinjector -->'
@@ -84,7 +90,7 @@ module.exports = function (grunt) {
                 options: {
                     transform: function (filePath) {
                         filePath = filePath.replace('/dist/public', '');
-                        return '<link rel="stylesheeT" href="' + filePath + '"></script>';
+                        return '<link rel="stylesheet" href="' + filePath + '">';
                     },
                     starttag: '<!-- injector:css -->',
                     endtag: '<!-- endinjector -->'

@@ -32,6 +32,31 @@ exports.getUser = function (req, res) {
         res.json(user);
     });
 };
+exports.deleteUser = function (req, res) {
+    var userId = req.params.id;
+    var _deleteUser = function (user) {
+        User.findOne({
+            _id: userId
+        }).remove(function () {
+            return res.status(200).send();
+        });
+    };
+
+    User.findOne({
+        _id: userId
+    }, 'email isAdmin followedCities', function (err, user) {
+        if (err || !user) return res.status(500).send({error: 'Enable to find user'});
+        FollowedCities.findOrCreateByUser(user, function (err, followedCities) {
+                if (err) return res.status(500).send({error: 'Enable to find user'});
+                if (!followedCities) {
+                    _deleteUser(user);
+                } else {
+                    followedCities.remove(_deleteUser(user));
+                }
+            }
+        );
+    });
+};
 exports.createUser = function (req, res) {
     var newUser = new User({
         email: req.body.email,

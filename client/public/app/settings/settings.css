@@ -1,0 +1,10 @@
+.settings-wrap {
+    background-color: #B2CEE9;
+    min-height: 370px;
+    max-width: 800px;
+    min-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 90px;
+    padding-top: 100px;
+}

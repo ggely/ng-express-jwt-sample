@@ -14,10 +14,10 @@
     "angular-bootstrap": "~0.14.3",
     "angular-jwt": "~0.0.9",
     "angular-storage": "~0.5.0",
-    "a0-angular-storage": "~0.0.12"
+    "a0-angular-storage": "~0.0.12",
+    "moment": "~2.10.6"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "appPath": "app",
   "moduleName": "logienApp",
   "overrides": {
