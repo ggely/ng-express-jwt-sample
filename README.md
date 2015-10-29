@@ -27,6 +27,9 @@ $ npm run populate-dev (wpopulation-dev on windows) ou $ npm run populate-dev-fu
 
 connect in localhost:3000
 
+Login : admin@admin.com
+Password : admin
+
 ## Deploy in production
 $ grunt build
 
