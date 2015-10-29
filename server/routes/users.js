@@ -13,6 +13,7 @@ router.get('/:id', auth.isAdmin(), controller.getUser);
 router.delete('/:id', auth.isAdmin(), controller.deleteUser);
 router.post('/:id', auth.isAdmin(), controller.modifyUser);
 router.post('/:id/cities', auth.isLoggedUser(), controller.addCity);
+router.delete('/:id/cities/:cityId', auth.isLoggedUser(), controller.removeCity);
 router.get('/:id/cities', auth.isLoggedUser(), controller.getCities);
 
 module.exports = router;

@@ -13,13 +13,13 @@ angular.module('logienApp.home', [
         });
     })
     .controller('HomeCtrl', function HomeController($scope, Users, Storage, Cities) {
-        $scope.selectedCityInfo;
+        $scope.selectedCityInfo = null;
         $scope.getDate = function (date) {
-            var formattedDate = new Date(date*1000);
+            var formattedDate = new Date(date * 1000);
             return moment(formattedDate).format('D MMM');
         };
         $scope.getTime = function (date) {
-            var formattedDate = new Date(date*1000);
+            var formattedDate = new Date(date * 1000);
             return moment(formattedDate).format('H');
         };
 
@@ -104,6 +104,23 @@ angular.module('logienApp.home', [
                     $scope.cities.push(city);
                     init();
                     Storage.loadCityData([city.ref]);
+                });
+            }
+        };
+
+        $scope.removeCity = function (city) {
+            if ($scope.isAFollowedCity(city)) {
+                Users.removeCity({id: $scope.me._id, otherId: city._id}, function () {
+                    var index = $scope.cities.findIndex(function (elm) {
+                        return elm.ref === city.ref
+                    });
+                    $scope.cities.splice(index, 1);
+                    if ($scope.cities.length === 1) {
+                        $scope.selectedCityInfo = null;
+                    } else {
+                        $scope.select($scope.cities[0]);
+                    }
+
                 });
             }
         };
