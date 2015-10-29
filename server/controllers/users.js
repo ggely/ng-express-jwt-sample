@@ -34,7 +34,7 @@ exports.getUser = function (req, res) {
 };
 exports.deleteUser = function (req, res) {
     var userId = req.params.id;
-    var _deleteUser = function (user) {
+    var _deleteUser = function () {
         User.findOne({
             _id: userId
         }).remove(function () {
@@ -153,6 +153,31 @@ exports.addCity = function (req, res) {
         });
     });
 };
+
+exports.removeCity = function (req, res) {
+    if (!req.params.cityId) return res.status(400).send({error: "No city given"});
+    User.findOne({
+        _id: req.user._id
+    }, 'followedCities', function (err, user) {
+        if (err || !user) return res.status(500).send({error: 'Enable to find users'});
+        FollowedCities.findOrCreateByUser(user, function (err, followedCities) {
+            if (err || !followedCities) return res.status(500).send({error: "Unable to delete city"});
+            var index = followedCities.cities.indexOf(req.params.cityId);
+            if (index !==-1) {
+                followedCities.cities.splice(index, 1);
+
+                followedCities.save(function (err) {
+                    if (err) return res.status(500).send({error: "Unable to delete city"});
+                    return res.status(200).send();
+                });
+            } else {
+                return res.status(500).send({error: "City not followed"});
+            }
+        });
+
+    });
+};
+
 exports.getCities = function (req, res) {
     User.findOne({
         _id: req.user._id
